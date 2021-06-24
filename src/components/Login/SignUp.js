@@ -2,10 +2,14 @@ import React from 'react';
 import firebase from "firebase/app";
 import "firebase/auth";
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory, useLocation } from 'react-router-dom';
 
 
 const SignUp = () => {
+    let history = useHistory();
+    let location = useLocation();
+  
+    let { from } = location.state || { from: { pathname: "/signIn" } };
 
     // const [newUser, setNewUser] = useState(false);
     const [user, setUser] = useState({
@@ -45,7 +49,8 @@ const SignUp = () => {
                     newUserInfo.error = '';
                     newUserInfo.success = true;
                     setUser(newUserInfo);
-                    // updateUserName(user.name);
+                    updateUserName(user.name);
+                    history.replace(from);
                 })
                 .catch((error) => {
                     const newUserInfo = { ...user };
@@ -58,21 +63,21 @@ const SignUp = () => {
     }
 
     //update user info
-    // const updateUserName = (name) => {
-    //     const user = firebase.auth().currentUser;
-    //     user.updateProfile({
-    //         displayName: name
+    const updateUserName = (name) => {
+        const user = firebase.auth().currentUser;
+        user.updateProfile({
+            displayName: name
 
-    //     }).then(() => {
-    //         console.log('Update user name successfully')
-    //     }).catch((error) => {
-    //         console.log(error);
-    //     });
-    // }
+        }).then(() => {
+            console.log('Update user name successfully')
+        }).catch((error) => {
+            console.log(error);
+        });
+    }
 
     return (
         <div className="center">
-            <h1>this is sign up</h1>
+            <h1>Sign Up</h1>
 
             <p>Name: {user.name}</p>
             <p>Email: {user.email} </p>
